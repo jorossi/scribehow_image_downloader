@@ -14,9 +14,8 @@ pip install requests uuid datetime
 
 1. Place the Markdown file containing image URLs in the same directory as the script and name it 
 
-input.txt
+`input.txt`
 
-.
 2. Run the script:
    ```sh
    python main.py
