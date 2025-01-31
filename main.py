@@ -42,12 +42,15 @@ class DownloadImage:
     def download_image(self, url):
         """Download an image from a URL and save it in the specified folder."""
         try:
-            id = str(uuid.uuid4())[:4]
-            time = datetime.now().strftime("%Y_%m_%d_%H_%M")
+            id = str(uuid.uuid4())[:4] # Generate a random ID for the image
+            time = datetime.now().strftime("%Y_%m_%d_%H_%M") # Get the current time
             response = requests.get(url, stream=True)
             response.raise_for_status()
             
-            filename = f"{time}_{id}.jpg"
+            # Get the file extension from the URL
+            file_extension = self._return_file_extension(url)
+            
+            filename = f"{time}_{id}{file_extension}"
             save_path = os.path.join(self.save_folder, filename)
             
             with open(save_path, 'wb') as file:
@@ -57,6 +60,16 @@ class DownloadImage:
             print(f"Downloaded: {filename}")
         except requests.exceptions.RequestException as e:
             print(f"Failed to download {url}: {e}")
+    
+    def _return_file_extension(self, url):
+        """Return the file extension of a URL. Helper function for download_image."""
+        parsed_url = urlparse(url)
+        path = parsed_url.path
+    
+        if os.path.splitext(path)[1] != ".jpeg" and os.path.splitext(path)[1] != ".jpg":
+            raise ValueError("The file extension is not supported. Currently only support .jpg and .jpeg")
+        return os.path.splitext(path)[1]
+        
 
 
 if __name__ == "__main__":
